@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace bArtTest.Models
 {
@@ -11,5 +13,8 @@ namespace bArtTest.Models
 
         [Required]
         public string email { get; set; }
+        public int Accountid { get; set; }
+
+        public Account account { get; set; }
     }
 }

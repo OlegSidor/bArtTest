@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace bArtTest.Models
 {
@@ -9,6 +11,9 @@ namespace bArtTest.Models
         [Key]
         public string name { get; set; }
         public string description { get; set; }
-        public List<Account> accounts { get; set; } = new List<Account>();
+
+        [JsonIgnore]
+        [IgnoreDataMember]
+        public List<Account> accounts { get; set; }
     }
 }

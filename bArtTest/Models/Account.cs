@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace bArtTest.Models
 {
@@ -12,7 +14,13 @@ namespace bArtTest.Models
 
         [Required]
         public string name { get; set; }
-        public List<Contact> contacts { get; set; } = new List<Contact>();
+
+        public string Incidentname { get; set; }
+        public Incident incident { get; set; }
+        
+        [JsonIgnore]
+        [IgnoreDataMember]
+        public List<Contact> contacts { get; set; }
 
     }
 }

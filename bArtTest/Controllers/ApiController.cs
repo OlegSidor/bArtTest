@@ -1,6 +1,8 @@
 ﻿using bArtTest.Context;
 using bArtTest.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 namespace bArtTest.Controllers
 {
@@ -13,21 +15,36 @@ namespace bArtTest.Controllers
         }
 
         [HttpGet]
-        public IActionResult accounts()
+        public IActionResult accounts(string? id)
         {
-            return Json(_db.Accounts.Select(a => a.name).ToList());
+            var account = _db.Accounts.Include(a => a.incident).Include(a => a.contacts).Single(a => a.name == id);
+            if(account == null)
+            {
+                return NotFound();
+            }
+            return Json(account);
         }
 
 
         [HttpGet]
         public IActionResult contacts(string? id)
-        {          
-            List<Contact> contacts = _db.Accounts.Where(a => a.name == id).SelectMany(a => a.contacts).ToList();
+        {
+            List<Contact> contacts = _db.Contacts.Where(c => c.account.name == id).ToList();
             if(!contacts.Any())
             {
                 return NotFound();
             }
             return Json(contacts);
+        }
+        [HttpGet]
+        public IActionResult incidents(string? id)
+        {
+            var incident = _db.Incidents.Include(i => i.accounts).Single(i => i.name == id);
+            if(incident == null)
+            {
+                return NotFound();
+            }
+            return Json(incident);
         }
     }
 }
