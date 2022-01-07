@@ -12,7 +12,7 @@ namespace bArtTest.Models
 
         [Required]
         public string name { get; set; }
-        public List<Contact> contacts { get; set; }
+        public List<Contact> contacts { get; set; } = new List<Contact>();
 
     }
 }
