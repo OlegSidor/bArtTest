@@ -46,5 +46,75 @@ namespace bArtTest.Controllers
             }
             return Json(incident);
         }
+
+        [HttpPost]
+        [Produces("application/json")]
+        public IActionResult createincident([FromBody] CUModel body)
+        {
+            if(body == null) return BadRequest();
+            var account = _db.Accounts.FirstOrDefault(a => a.name == body.account);
+            if (account != null) return BadRequest();
+            using (var transaction = _db.Database.BeginTransaction())
+            {
+                try
+                {
+                    Incident incident = new Incident { description = body.description };
+                    _db.Incidents.Add(incident);
+                    _db.SaveChanges();
+                    account = new Account { name = body.account, Incidentname = incident.name };
+                    _db.Accounts.Add(account);
+                    _db.SaveChanges();
+                    int id = account.id;
+                    Contact contact = new Contact { Accountid = id,
+                        email = body.email, 
+                        firts_name = body.first_name,
+                        last_name = body.last_name,
+                        account = account
+                    };
+                    _db.Contacts.Add(contact);
+                    _db.SaveChanges();
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    return Problem();
+                }
+            }
+            return Ok();
+        }
+
+        [HttpPost]
+        [Produces("application/json")]
+        public IActionResult addcontact([FromBody] CUModel body)
+        {
+            var account = _db.Accounts.FirstOrDefault(a => a.name == body.account);
+            var contact = _db.Contacts.FirstOrDefault(a => a.email == body.email);
+            if (contact != null) return BadRequest();
+            if (account == null) return BadRequest();
+            using (var transaction = _db.Database.BeginTransaction())
+            {
+                try
+                {
+                    contact = new Contact
+                    {
+                        Accountid = account.id,
+                        email = body.email,
+                        firts_name = body.first_name,
+                        last_name = body.last_name,
+                        account = account
+                    };
+                    _db.Contacts.Add(contact);
+                    _db.SaveChanges();
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    return Problem();
+                }
+            }
+            return Ok();
+        }
     }
 }
