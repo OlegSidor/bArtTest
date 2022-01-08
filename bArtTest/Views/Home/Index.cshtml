@@ -5,3 +5,133 @@
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
 </div>
+
+<style>
+    code {
+        background-color: #555;
+        padding: 20px;
+        width: 100%;
+        display: block;
+        margin-bottom: 10px;
+    }
+</style>
+<h2>Examples</h2>
+<h5>Accounts: </h3>
+<span>Request:</span>
+<code>
+    GET /api/accounts/a
+</code>
+<span>Responce:</span>
+<code>
+    <p>200</p>
+    {"id":1,"name":"a","incidentname":"a","incident":{"name":"a","description":"ERROR"}}
+</code>
+<span>Request:</span>
+<code>
+    GET /api/accounts/kkk
+</code>
+<span>Responce:</span>
+<code>
+    404
+</code>
+
+<h5>Contacts: </h3>
+<p>get:</p>
+<span>Request:</span>
+<code>
+    GET /api/contacts/a
+</code>
+<span>Responce:</span>
+<code>
+    <p>200</p>
+    [{"id":1,"firts_name":"Lofi","last_name":"Girl","email":"mrx27898@gmail.com","accountid":1,"account":null},{"id":2,"firts_name":"Sherlok","last_name":"Homes","email":"aaaa@mail.com","accountid":1,"account":null}]
+</code>
+<span>Request:</span>
+<code>
+    GET /api/contacts/kkk
+</code>
+<span>Responce:</span>
+<code>
+    404
+</code>
+
+<p>create:</p>
+<span>Request:</span>
+<code>
+    POST /api/addcontact/<br />
+    {
+        "account": "a",
+        "email": "bbb@mail.com",
+        "first_name": "Mother",
+        "last_name": "Mother"
+    }
+</code>
+<span>Responce:</span>
+<code>
+    200
+</code>
+<p>edit:</p>
+<span>Request:</span>
+<code>
+    PUT /api/editcontact/<br />
+    {
+        "email": "mrx27898@gmail.com",
+        "first_name": "Lofi",
+        "last_name": "Girl"
+    }
+</code>
+<span>Responce:</span>
+<code>
+    200
+</code>
+
+
+
+<h5>Incidents: </h3>
+<p>get:</p>
+<span>Request:</span>
+<code>
+    GET /api/incidents/a
+</code>
+<span>Responce:</span>
+<code>
+    <p>200</p>
+    {"name":"a","description":"ERROR"}    
+</code>
+<span>Request:</span>
+<code>
+    GET /api/incidents/kkk
+</code>
+<span>Responce:</span>
+<code>
+    404
+</code>
+<p>create:</p>
+<span>Request:</span>
+<code>
+    POST /api/createincident/<br />
+    {
+        "account": "b",
+        "email": "ccc@mail.com",
+        "first_name": "John",
+        "last_name": "Maus",
+        "description": "WARNING"
+    }
+</code>
+<span>Responce:</span>
+<code>
+    200
+</code>
+<p>edit:</p>
+<span>Request:</span>
+<code>
+    PUT /api/editincident/<br />
+    {
+        "account": "a",
+        "description": "ERROR"
+    }
+</code>
+<span>Responce:</span>
+<code>
+    200
+</code>

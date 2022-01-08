@@ -39,8 +39,8 @@ namespace bArtTest.Controllers
         [HttpGet]
         public IActionResult incidents(string? id)
         {
-            var incident = _db.Incidents.Include(i => i.accounts).Single(i => i.name == id);
-            if(incident == null)
+            var incident = _db.Accounts.Where(a => a.name == id).Include(a => a.incident).Select(a => a.incident).FirstOrDefault();
+            if (incident == null)
             {
                 return NotFound();
             }
@@ -91,7 +91,7 @@ namespace bArtTest.Controllers
             var account = _db.Accounts.FirstOrDefault(a => a.name == body.account);
             var contact = _db.Contacts.FirstOrDefault(a => a.email == body.email);
             if (contact != null) return BadRequest();
-            if (account == null) return BadRequest();
+            if (account == null) return NotFound();
             using (var transaction = _db.Database.BeginTransaction())
             {
                 try
@@ -105,6 +105,54 @@ namespace bArtTest.Controllers
                         account = account
                     };
                     _db.Contacts.Add(contact);
+                    _db.SaveChanges();
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    return Problem();
+                }
+            }
+            return Ok();
+        }
+
+        [HttpPut]
+        [Produces("application/json")]
+        public IActionResult editcontact([FromBody] CUModel body)
+        {
+            var contact = _db.Contacts.FirstOrDefault(a => a.email == body.email);
+            if (contact == null) return NotFound();
+            using (var transaction = _db.Database.BeginTransaction())
+            {
+                try
+                {
+                    if(body.first_name != null)
+                        contact.firts_name = body.first_name;
+                    if (body.last_name != null)
+                        contact.last_name = body.last_name;
+                    _db.SaveChanges();
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    return Problem();
+                }
+            }
+            return Ok();
+        }
+        [HttpPut]
+        [Produces("application/json")]
+        public IActionResult editincident([FromBody] CUModel body)
+        {
+            var inciden = _db.Accounts.Where(a => a.name == body.account).Include(a => a.incident).Select(a => a.incident).FirstOrDefault();
+            if(inciden == null) return NotFound();
+            using (var transaction = _db.Database.BeginTransaction())
+            {
+                try
+                {
+                    inciden.description = body.description;
                     _db.SaveChanges();
                     transaction.Commit();
                 }
